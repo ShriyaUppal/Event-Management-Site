@@ -20,9 +20,12 @@ const CreateEvent = () => {
   useEffect(() => {
     if (id) {
       axios
-        .get(`http://localhost:5000/api/events/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+        .get(
+          `https://event-management-backend-mf6a.onrender.com/api/events/${id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
         .then((res) => {
           setEventName(res.data.name || "");
           setDescription(res.data.description || "");
@@ -54,14 +57,22 @@ const CreateEvent = () => {
       };
 
       if (id) {
-        await axios.put(`http://localhost:5000/api/events/${id}`, eventData, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        await axios.put(
+          `https://event-management-backend-mf6a.onrender.com/api/events/${id}`,
+          eventData,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         alert("✅ Event Updated Successfully!");
       } else {
-        await axios.post("http://localhost:5000/api/events/create", eventData, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        await axios.post(
+          "https://event-management-backend-mf6a.onrender.com/api/events/create",
+          eventData,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         alert("✅ Event Created Successfully!");
       }
       navigate("/dashboard");

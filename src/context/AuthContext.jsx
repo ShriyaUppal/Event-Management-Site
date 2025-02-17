@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
     try {
       console.log("Attempting Login with:", { email, password }); // ✅ Debugging log
       const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
+        "https://event-management-backend-mf6a.onrender.com/api/auth/login",
         { email, password },
         { headers: { "Content-Type": "application/json" } }
       );

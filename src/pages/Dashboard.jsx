@@ -17,10 +17,13 @@ const Dashboard = () => {
     try {
       setLoading(true);
       setError(null); // Reset error before making a request
-      const { data } = await axios.get("http://localhost:5000/api/events", {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-        params: { search: searchQuery, sort: sortOption },
-      });
+      const { data } = await axios.get(
+        "https://event-management-backend-mf6a.onrender.com/api/events",
+        {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+          params: { search: searchQuery, sort: sortOption },
+        }
+      );
 
       setTimeout(() => {
         const formattedEvents = data.map((event) => ({
@@ -69,9 +72,12 @@ const Dashboard = () => {
     if (!window.confirm("Are you sure you want to delete this event?")) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/events/${eventId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.delete(
+        `https://event-management-backend-mf6a.onrender.com/api/events/${eventId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setEvents(events.filter((event) => event._id !== eventId));
       alert("Event deleted successfully!");
     } catch (error) {

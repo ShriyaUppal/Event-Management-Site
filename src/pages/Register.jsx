@@ -19,11 +19,14 @@ const Register = () => {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
-      });
+      const response = await fetch(
+        "https://event-management-backend-mf6a.onrender.com/api/auth/register",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(userData),
+        }
+      );
 
       const data = await response.json();
 
