@@ -19,7 +19,7 @@ const Dashboard = () => {
       setError(null);
 
       const { data } = await axios.get(
-        "https://event-management-backend-mf6a.onrender.com/api/events",
+        "https://event-management-backend-mf6a.onrender.com/api/events/",
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
           params: { search: searchQuery, sort: sortOption },
