@@ -17,57 +17,31 @@ const Dashboard = () => {
     try {
       setLoading(true);
       setError(null); // Reset error before making a request
+
+      console.log("Fetching events with:", { searchQuery, sortOption });
+
       const { data } = await axios.get(
         "https://event-management-backend-mf6a.onrender.com/api/events",
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
-          params: { search: searchQuery, sort: sortOption },
+          params: { search: searchQuery, sort: sortOption }, // Pass search and sort as params
         }
       );
-      console.log(data); // Check if data is being received properly
+
+      console.log("Received Data:", data); // Debugging to verify API response
       setLoading(false);
-
-      setTimeout(() => {
-        const formattedEvents = data.map((event) => ({
-          ...event,
-          category: event.category
-            ? event.category.charAt(0).toUpperCase() + event.category.slice(1)
-            : "Uncategorized",
-          tags: Array.isArray(event.tags) ? event.tags : [],
-          dateObj: event.date ? new Date(event.date) : null,
-        }));
-
-        if (sortOption === "newest") {
-          formattedEvents.sort((a, b) => (b.dateObj || 0) - (a.dateObj || 0));
-        } else if (sortOption === "oldest") {
-          formattedEvents.sort((a, b) => (a.dateObj || 0) - (b.dateObj || 0));
-        } else if (sortOption === "attendees") {
-          formattedEvents.sort(
-            (a, b) =>
-              (Array.isArray(b.attendees) ? b.attendees.length : 0) -
-              (Array.isArray(a.attendees) ? a.attendees.length : 0)
-          );
-        }
-
-        setEvents(
-          formattedEvents.map((event) => ({
-            ...event,
-            date: event.dateObj
-              ? event.dateObj.toLocaleDateString()
-              : "No Date",
-          }))
-        );
-        setLoading(false);
-      }, 500); // 500ms buffer time for smooth loading effect
+      setEvents(data);
     } catch (error) {
+      console.error("Error fetching events:", error);
       setError("Failed to load events. Please try again.");
       setLoading(false);
     }
   }, [token, searchQuery, sortOption]);
 
+  // ✅ useEffect now runs when searchQuery or sortOption changes
   useEffect(() => {
     fetchEvents();
-  }, [token]);
+  }, [token, searchQuery, sortOption]);
 
   // Handle Delete Event
   const handleDelete = async (eventId) => {
@@ -109,8 +83,8 @@ const Dashboard = () => {
 
       {error && <p className="text-red-500">{error}</p>}
 
+      {/* Search & Sorting Controls */}
       <div className="flex">
-        {/* Search Input */}
         <input
           type="text"
           placeholder="Search Events"
@@ -119,7 +93,6 @@ const Dashboard = () => {
           className="p-2 border rounded"
         />
 
-        {/* Sort Dropdown */}
         <select
           value={sortOption}
           onChange={(e) => setSortOption(e.target.value)}
@@ -134,7 +107,6 @@ const Dashboard = () => {
           onClick={() => {
             setSearchQuery("");
             setSortOption("newest");
-            fetchEvents();
           }}
           className="bg-blue-500 text-white px-2 py-1 rounded-lg hover:bg-blue-700 transition ml-8 cursor-pointer"
         >
@@ -168,7 +140,7 @@ const Dashboard = () => {
               </p>
               <p className="text-gray-700 mt-2">
                 <span className="font-bold text-gray-900">📅 Date:</span>{" "}
-                {event.date}
+                {new Date(event.date).toLocaleDateString()}
               </p>
               <p className="text-gray-700 mt-2">
                 <span className="font-bold text-gray-900">🏷️ Category:</span>{" "}
