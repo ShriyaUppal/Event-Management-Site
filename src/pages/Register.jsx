@@ -18,6 +18,12 @@ const Register = () => {
     e.preventDefault();
     setError("");
 
+    // Check for missing fields
+    if (!userData.name || !userData.email || !userData.password) {
+      setError("Please fill all fields.");
+      return;
+    }
+
     try {
       const response = await fetch(
         "https://event-management-backend-mf6a.onrender.com/api/auth/register",
@@ -29,10 +35,12 @@ const Register = () => {
       );
 
       const data = await response.json();
-      console.log("Response data", data);
+      console.log("Response data", data); // Logs the response after parsing
 
       if (!response.ok) {
-        throw new Error(data.message || "Registration failed");
+        const errorMessage =
+          data.message || "Registration failed. Please try again.";
+        throw new Error(errorMessage);
       }
 
       alert("Registration successful! Please log in.");
