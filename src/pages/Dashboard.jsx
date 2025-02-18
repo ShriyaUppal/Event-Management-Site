@@ -66,7 +66,12 @@ const Dashboard = () => {
         setLoading(false);
       }, 500);
     } catch (error) {
-      setError("Failed to load events. Please try again.");
+      console.error("Error fetching events:", error);
+      setError(
+        error.response
+          ? error.response.data.message
+          : "Failed to load events. Please try again."
+      );
       setLoading(false);
     }
   }, [token, searchQuery, sortOption]);
