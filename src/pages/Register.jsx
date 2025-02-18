@@ -27,6 +27,7 @@ const Register = () => {
           body: JSON.stringify(userData),
         }
       );
+      console.log("Response data", data);
 
       const data = await response.json();
 

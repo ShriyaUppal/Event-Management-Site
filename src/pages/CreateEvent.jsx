@@ -15,7 +15,7 @@ const CreateEvent = () => {
   const [tags, setTags] = useState(""); // ✅ Tags as comma-separated values
   const [loading, setLoading] = useState(true);
 
-  const categories = ["Conference", "Workshop", "Webinar", "Meetup"]; // ✅ Example categories
+  const categories = ["conference", "workshop", "webinar", "meetup"]; // ✅ Example categories
 
   useEffect(() => {
     if (id) {
@@ -27,6 +27,7 @@ const CreateEvent = () => {
           }
         )
         .then((res) => {
+          console.log("Fetched event details:", res.data); // Log the response
           setEventName(res.data.name || "");
           setDescription(res.data.description || "");
           setDate(res.data.date ? res.data.date.split("T")[0] : ""); // ✅ Fix date format
@@ -55,6 +56,7 @@ const CreateEvent = () => {
         category,
         tags: tags.split(",").map((tag) => tag.trim()), // ✅ Convert comma-separated tags to array
       };
+      console.log("Event Data for Update:", eventData);
 
       if (id) {
         await axios.put(
