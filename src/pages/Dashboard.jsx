@@ -78,6 +78,7 @@ const Dashboard = () => {
 
   // ✅ Ensure useEffect triggers when sortOption changes
   useEffect(() => {
+    setEvents([]);
     fetchEvents();
   }, [fetchEvents]);
 
