@@ -24,6 +24,8 @@ const Dashboard = () => {
           params: { search: searchQuery, sort: sortOption },
         }
       );
+      console.log(data); // Check if data is being received properly
+      setLoading(false);
 
       setTimeout(() => {
         const formattedEvents = data.map((event) => ({
