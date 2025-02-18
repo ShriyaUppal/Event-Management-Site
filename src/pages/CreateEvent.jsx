@@ -53,7 +53,7 @@ const CreateEvent = () => {
         name: eventName,
         description,
         date,
-        category,
+        category: category.toLowerCase(),
         tags: tags.split(",").map((tag) => tag.trim()), // ✅ Convert comma-separated tags to array
       };
       console.log("Event Data for Update:", eventData);
