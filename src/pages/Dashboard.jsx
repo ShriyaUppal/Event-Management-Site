@@ -18,8 +18,6 @@ const Dashboard = () => {
       setLoading(true);
       setError(null);
 
-      console.log("Fetching events with:", { searchQuery, sortOption });
-
       const { data } = await axios.get(
         "https://event-management-backend-mf6a.onrender.com/api/events",
         {
@@ -28,11 +26,42 @@ const Dashboard = () => {
         }
       );
 
-      console.log("Received Data:", data);
-      setEvents(data);
+      console.log("Fetched Events:", data); // Debugging
+
       setLoading(false);
+
+      setTimeout(() => {
+        const formattedEvents = data.map((event) => ({
+          ...event,
+          category: event.category
+            ? event.category.charAt(0).toUpperCase() + event.category.slice(1)
+            : "Uncategorized",
+          tags: Array.isArray(event.tags) ? event.tags : [],
+          dateObj: new Date(event.date), // ✅ Ensure proper Date object
+        }));
+
+        // ✅ Fix sorting logic to compare full dates
+        if (sortOption === "newest") {
+          formattedEvents.sort((a, b) => b.dateObj - a.dateObj); // Descending
+        } else if (sortOption === "oldest") {
+          formattedEvents.sort((a, b) => a.dateObj - b.dateObj); // Ascending
+        } else if (sortOption === "attendees") {
+          formattedEvents.sort(
+            (a, b) =>
+              (Array.isArray(b.attendees) ? b.attendees.length : 0) -
+              (Array.isArray(a.attendees) ? a.attendees.length : 0)
+          );
+        }
+
+        setEvents(
+          formattedEvents.map((event) => ({
+            ...event,
+            date: event.dateObj.toLocaleDateString(), // Format date properly
+          }))
+        );
+        setLoading(false);
+      }, 500);
     } catch (error) {
-      console.error("Error fetching events:", error);
       setError("Failed to load events. Please try again.");
       setLoading(false);
     }
