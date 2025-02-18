@@ -31,20 +31,24 @@ const Dashboard = () => {
       setLoading(false);
 
       setTimeout(() => {
-        const formattedEvents = data.map((event) => ({
-          ...event,
-          category: event.category
-            ? event.category.charAt(0).toUpperCase() + event.category.slice(1)
-            : "Uncategorized",
-          tags: Array.isArray(event.tags) ? event.tags : [],
-          dateObj: new Date(event.date), // ✅ Ensure proper Date object
-        }));
+        const formattedEvents = data.map((event) => {
+          // Ensure event.date is a proper Date object
+          const dateObj = new Date(event.date); // ✅ Ensure proper Date object
+          return {
+            ...event,
+            category: event.category
+              ? event.category.charAt(0).toUpperCase() + event.category.slice(1)
+              : "Uncategorized",
+            tags: Array.isArray(event.tags) ? event.tags : [],
+            dateObj: dateObj, // Store date as Date object
+          };
+        });
 
-        // ✅ Fix sorting logic to compare full dates
+        // ✅ Fix sorting logic to compare full dates (dateObj is the correct date object)
         if (sortOption === "newest") {
-          formattedEvents.sort((a, b) => b.dateObj - a.dateObj); // Descending
+          formattedEvents.sort((a, b) => b.dateObj - a.dateObj); // Sort by newest
         } else if (sortOption === "oldest") {
-          formattedEvents.sort((a, b) => a.dateObj - b.dateObj); // Ascending
+          formattedEvents.sort((a, b) => a.dateObj - b.dateObj); // Sort by oldest
         } else if (sortOption === "attendees") {
           formattedEvents.sort(
             (a, b) =>
