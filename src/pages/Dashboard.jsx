@@ -16,7 +16,7 @@ const Dashboard = () => {
   const fetchEvents = useCallback(async () => {
     try {
       setLoading(true);
-      setError(null); // Reset error before making a request
+      setError(null);
 
       console.log("Fetching events with:", { searchQuery, sortOption });
 
@@ -24,13 +24,13 @@ const Dashboard = () => {
         "https://event-management-backend-mf6a.onrender.com/api/events",
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
-          params: { search: searchQuery, sort: sortOption }, // Pass search and sort as params
+          params: { search: searchQuery, sort: sortOption },
         }
       );
 
-      console.log("Received Data:", data); // Debugging to verify API response
-      setLoading(false);
+      console.log("Received Data:", data);
       setEvents(data);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching events:", error);
       setError("Failed to load events. Please try again.");
@@ -38,10 +38,17 @@ const Dashboard = () => {
     }
   }, [token, searchQuery, sortOption]);
 
-  // ✅ useEffect now runs when searchQuery or sortOption changes
+  // ✅ Ensure useEffect triggers when sortOption changes
   useEffect(() => {
     fetchEvents();
-  }, [token, searchQuery, sortOption]);
+  }, [fetchEvents]);
+
+  // Handle sorting change
+  const handleSortChange = (e) => {
+    const newSortOption = e.target.value;
+    setSortOption(newSortOption);
+    fetchEvents(); // 🔥 Manually trigger event fetch on sort change
+  };
 
   // Handle Delete Event
   const handleDelete = async (eventId) => {
@@ -95,7 +102,7 @@ const Dashboard = () => {
 
         <select
           value={sortOption}
-          onChange={(e) => setSortOption(e.target.value)}
+          onChange={handleSortChange} // ✅ Trigger API call on change
           className="p-2 border rounded ml-8"
         >
           <option value="newest">Newest First</option>
@@ -107,6 +114,7 @@ const Dashboard = () => {
           onClick={() => {
             setSearchQuery("");
             setSortOption("newest");
+            fetchEvents(); // 🔥 Trigger API call on reset
           }}
           className="bg-blue-500 text-white px-2 py-1 rounded-lg hover:bg-blue-700 transition ml-8 cursor-pointer"
         >
