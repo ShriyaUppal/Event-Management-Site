@@ -44,7 +44,9 @@ const Register = () => {
       }
 
       alert("Registration successful! Please log in.");
-      navigate("/login");
+      setTimeout(() => {
+        navigate("/login");
+      }, 1000);
     } catch (err) {
       setError(err.message);
     }
