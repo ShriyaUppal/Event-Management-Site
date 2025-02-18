@@ -27,9 +27,9 @@ const Register = () => {
           body: JSON.stringify(userData),
         }
       );
-      console.log("Response data", data);
 
       const data = await response.json();
+      console.log("Response data", data);
 
       if (!response.ok) {
         throw new Error(data.message || "Registration failed");
